@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Westworld Control Hub</title>
+
+    <!-- Modern Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #07090e;
+            --surface: rgba(18, 22, 34, 0.8);
+            --card: rgba(26, 31, 46, 0.9);
+            --purple: #9d4edd;
+            --cyan: #00e5ff;
+            --pink: #ff2a85;
+            --text: #f0f4f8;
+            --muted: #94a3b8;
+            --radius: 16px;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            background-image:
+                radial-gradient(circle at 15% 15%, rgba(157, 78, 221, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 85% 85%, rgba(0, 229, 255, 0.08) 0%, transparent 40%);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ===== NAVBAR ===== */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(7, 9, 14, 0.9);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(157, 78, 221, 0.25);
+        }
+
+        .navbar {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 14px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .brand-logo {
+            width: 38px;
+            height: 38px;
+            background: linear-gradient(135deg, var(--purple), var(--cyan));
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 800;
+            color: white;
+            box-shadow: 0 0 18px rgba(157, 78, 221, 0.5);
+        }
+
+        .brand-title {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            font-size: 1.3rem;
+            letter-spacing: 2px;
+            background: linear-gradient(90deg, #fff, var(--cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 8px;
+            list-style: none;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--muted);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .nav-btn:hover {
+            color: white;
+            background: rgba(255,255,255,0.06);
+        }
+
+        .nav-btn.active {
+            color: white;
+            background: linear-gradient(135deg, rgba(157,78,221,0.45), rgba(0,229,255,0.2));
+            border-color: rgba(0,229,255,0.4);
+            box-shadow: 0 0 14px rgba(157,78,221,0.35);
+        }
+
+        /* ===== MAIN ===== */
+        main {
+            flex: 1;
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 28px 20px;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ===== HERO / IMAGE SECTION ===== */
+        .hero {
+            display: grid;
+            grid-template-columns: 1.1fr 1fr;
+            gap: 0;
+            background: var(--card);
+            border-radius: var(--radius);
+            overflow: hidden;
+            border: 1px solid rgba(157, 78, 221, 0.25);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.45);
+            margin-bottom: 28px;
+        }
+
+        .hero-img {
+            position: relative;
+            min-height: 340px;
+            background: #111;
+        }
+
+        /* ========== 👇 ADD / CHANGE YOUR IMAGE HERE 👇 ========== */
+        .hero-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: top center;
+            display: block;
+        }
+        /* ======================================================== */
+
+        .hero-text {
+            padding: 36px 32px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            background: rgba(0,229,255,0.12);
+            color: var(--cyan);
+            border: 1px solid rgba(0,229,255,0.3);
+            width: fit-content;
+            margin-bottom: 14px;
+        }
+
+        .hero-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.1rem;
+            line-height: 1.2;
+            margin-bottom: 14px;
+            background: linear-gradient(90deg, #ffffff, var(--cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-desc {
+            color: var(--muted);
+            font-size: 1.05rem;
+            line-height: 1.65;
+        }
+
+        /* Story card */
+        .story-card {
+            background: var(--surface);
+            backdrop-filter: blur(12px);
+            border-radius: var(--radius);
+            padding: 26px;
+            border: 1px solid rgba(255,255,255,0.08);
+            margin-bottom: 10px;
+        }
+
+        .story-card h3 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--purple);
+            font-size: 1.15rem;
+            margin-bottom: 12px;
+        }
+
+        .story-card p {
+            color: var(--text);
+            font-size: 1.02rem;
+            line-height: 1.7;
+            font-style: italic;
+        }
+
+        /* ===== SECTION HEADERS ===== */
+        .section-header {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 22px;
+        }
+
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.45rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 5px;
+            height: 26px;
+            background: var(--purple);
+            border-radius: 3px;
+            box-shadow: 0 0 12px var(--purple);
+        }
+
+        /* Search */
+        .search-box input {
+            width: 100%;
+            min-width: 240px;
+            padding: 11px 16px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 10px;
+            color: white;
+            outline: none;
+            font-size: 0.95rem;
+            transition: var(--transition);
+        }
+        .search-box input:focus {
+            border-color: var(--cyan);
+            box-shadow: 0 0 12px rgba(0,229,255,0.25);
+        }
+
+        /* ===== TABLE ===== */
+        .table-wrap {
+            background: var(--surface);
+            border-radius: var(--radius);
+            border: 1px solid rgba(255,255,255,0.08);
+            overflow-x: auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 640px;
+        }
+
+        th {
+            background: rgba(157, 78, 221, 0.18);
+            color: var(--cyan);
+            padding: 16px 20px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.82rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            text-align: left;
+        }
+
+        td {
+            padding: 16px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            font-size: 0.95rem;
+        }
+
+        tbody tr:hover td {
+            background: rgba(157, 78, 221, 0.1);
+        }
+
+        .badge-duty {
+            background: rgba(157, 78, 221, 0.2);
+            color: #c77dff;
+            padding: 4px 11px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        /* ===== OPERATIONS CARDS ===== */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+        }
+
+        .op-card {
+            background: var(--card);
+            border-radius: var(--radius);
+            padding: 26px;
+            border: 1px solid rgba(255,255,255,0.08);
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .op-card:hover {
+            transform: translateY(-6px);
+            border-color: var(--cyan);
+            box-shadow: 0 12px 28px rgba(0,229,255,0.15);
+        }
+
+        .op-number {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: rgba(255,255,255,0.07);
+            position: absolute;
+            top: 10px;
+            right: 18px;
+        }
+
+        .op-card h4 {
+            color: var(--cyan);
+            font-size: 1.15rem;
+            margin-bottom: 10px;
+        }
+
+        .op-card p {
+            color: var(--muted);
+            font-size: 0.95rem;
+            line-height: 1.55;
+        }
+
+        /* ===== STAFF PORTAL ===== */
+        .portal-box {
+            max-width: 520px;
+            margin: 0 auto;
+        }
+
+        .warning {
+            background: rgba(255, 42, 133, 0.1);
+            border: 1px solid rgba(255, 42, 133, 0.3);
+            border-left: 4px solid var(--pink);
+            padding: 16px 18px;
+            border-radius: 10px;
+            margin-bottom: 24px;
+        }
+
+        .warning h4 {
+            color: var(--pink);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.95rem;
+            margin-bottom: 4px;
+        }
+
+        .warning p {
+            color: var(--muted);
+            font-size: 0.88rem;
+        }
+
+        .portal-form {
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 28px;
+            border: 1px solid rgba(255,255,255,0.08);
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .form-field label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--muted);
+            margin-bottom: 6px;
+        }
+
+        .form-field input,
+        .form-field select {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 10px;
+            color: white;
+            outline: none;
+            font-size: 0.95rem;
+            transition: var(--transition);
+        }
+
+        .form-field input:focus,
+        .form-field select:focus {
+            border-color: var(--purple);
+            box-shadow: 0 0 14px rgba(157,78,221,0.3);
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, var(--purple), #6b21a8);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 10px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            letter-spacing: 1px;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: var(--transition);
+            box-shadow: 0 6px 20px rgba(157,78,221,0.4);
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(157,78,221,0.55);
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 28px;
+            right: 28px;
+            background: var(--card);
+            border: 1px solid var(--cyan);
+            color: white;
+            padding: 14px 22px;
+            border-radius: 12px;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.5);
+            transform: translateY(120%);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 2000;
+        }
+        .toast.show {
+            transform: translateY(0);
+        }
+
+        footer {
+            text-align: center;
+            padding: 22px;
+            color: var(--muted);
+            font-size: 0.85rem;
+            border-top: 1px solid rgba(157,78,221,0.2);
+            margin-top: 40px;
+        }
+
+        /* ===== MOBILE ===== */
+        @media (max-width: 850px) {
+            .hero {
+                grid-template-columns: 1fr;
+            }
+            .hero-img {
+                min-height: 260px;
+                max-height: 320px;
+            }
+            .hero-title {
+                font-size: 1.7rem;
+            }
+            .navbar {
+                flex-direction: column;
+                gap: 12px;
+            }
+            .nav-links {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .nav-btn {
+                padding: 7px 12px;
+                font-size: 0.8rem;
+            }
+            .hero-text {
+                padding: 24px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ================= NAVBAR ================= -->
+<header>
+    <nav class="navbar">
+        <a href="#" class="brand" onclick="switchTab('home')">
+            <div class="brand-logo">W</div>
+            <span class="brand-title">WESTWORLD</span>
+        </a>
+        <ul class="nav-links">
+            <li><button class="nav-btn active" onclick="switchTab('home')">Overview</button></li>
+            <li><button class="nav-btn" onclick="switchTab('committee')">Committee</button></li>
+            <li><button class="nav-btn" onclick="switchTab('operations')">Farm Ops</button></li>
+            <li><button class="nav-btn" onclick="switchTab('portal')">Staff Portal</button></li>
+        </ul>
+    </nav>
+</header>
+
+<!-- ================= MAIN CONTENT ================= -->
+<main>
+
+    <!-- TAB 1: OVERVIEW -->
+    <section id="tab-home" class="tab-content active">
+
+        <!-- HERO WITH IMAGE -->
+        <div class="hero">
+            <div class="hero-img>
+                <!-- 
+                    ============================================
+                    📍 PUT YOUR IMAGE HERE
+                    ============================================
+                    Option 1 (local file):  src="sev.jpg"
+                    Option 2 (local file):  src="westworld.jpg"
+                    Option 3 (online url):  keep the link below
+                    ============================================
+                -->
+             <img src="sev.jpg" alt="Westworld">
+            </div>
+
+            <div class="hero-text">
+                <span class="badge">Delos Laboratories</span>
+                <h1 class="hero-title">WELCOME TO WESTWORLD</h1>
+                <p class="hero-desc">
+                    Westworld is about science going too far. This science makes life find a way of changing the future.
+                </p>
+            </div>
+        </div>
+
+        <!-- STORY -->
+        <div class="story-card">
+            <h3>PARK ARCHIVE NARRATIVE</h3>
+            <p>
+                Welcome to Westworld. Technician Charles worked in the park where science had gone too far, 
+                building hosts like <strong>"Adam"</strong> — a perfect robot displayed in the circle, 
+                just like the logo on the website. For 5 years Adam had lived the same loop.
+            </p>
+        </div>
+    </section>
+
+    <!-- TAB 2: COMMITTEE -->
+    <section id="tab-committee" class="tab-content">
+        <div class="section-header">
+            <h2 class="section-title">Scientists On Board</h2>
+            <div class="search-box">
+                <input type="text" id="tableSearch" placeholder="Search name or duty..." onkeyup="filterTable()">
+            </div>
+        </div>
+
+        <div class="table-wrap">
+            <table id="staffTable">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Duty</th>
+                        <th>Number</th>
+                        <th>Age</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Dr. Charles Segawa</strong></td>
+                        <td><span class="badge-duty">Organic Scientist</span></td>
+                        <td>650075001</td>
+                        <td>23</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Kelvin Kamya</strong></td>
+                        <td><span class="badge-duty">Programmer</span></td>
+                        <td>650075002</td>
+                        <td>76</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Lawrence</strong></td>
+                        <td><span class="badge-duty">Software Engineer</span></td>
+                        <td>650075003</td>
+                        <td>65</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Sophia</strong></td>
+                        <td><span class="badge-duty">Body Building</span></td>
+                        <td>650075004</td>
+                        <td>98</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- TAB 3: FARM OPERATIONS -->
+    <section id="tab-operations" class="tab-content">
+        <div class="section-header">
+            <h2 class="section-title">Work Done On The Farm</h2>
+        </div>
+
+        <div class="cards-grid">
+            <div class="op-card">
+                <span class="op-number">01</span>
+                <h4>Building Hosts</h4>
+                <p>Constructing synthetic biological frames and assembling artificial internal structures with precision micro-engineering.</p>
+            </div>
+            <div class="op-card">
+                <span class="op-number">02</span>
+                <h4>Giving Them Gestures</h4>
+                <p>Programming natural motor functions, subtle facial expressions, and realistic behavioral gestures to enhance realism.</p>
+            </div>
+            <div class="op-card">
+                <span class="op-number">03</span>
+                <h4>Writing Host Stories</h4>
+                <p>Designing intricate narrative loops, background memories, and emotional triggers unique to each active host.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- TAB 4: STAFF PORTAL -->
+    <section id="tab-portal" class="tab-content">
+        <div class="portal-box">
+            <div class="section-header">
+                <h2 class="section-title">Staff Portal</h2>
+            </div>
+
+            <div class="warning">
+                <h4>⚠ CAUTION — STAFF ONLY</h4>
+                <p>This information is restricted. Fill the blank spaces and submit your details.</p>
+            </div>
+
+            <form class="portal-form" onsubmit="handleSubmit(event)">
+                <div class="form-field">
+                    <label>Full Name</label>
+                    <input type="text" placeholder="e.g. Dr. Charles Segawa" required>
+                </div>
+                <div class="form-field">
+                    <label>Staff ID Number</label>
+                    <input type="text" placeholder="e.g. 650075001" required>
+                </div>
+                <div class="form-field">
+                    <label>Department</label>
+                    <select required>
+                        <option value="">Select department...</option>
+                        <option>Organic Science</option>
+                        <option>Programming</option>
+                        <option>Software Engineering</option>
+                        <option>Body Building</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-submit">SUBMIT INFORMATION</button>
+            </form>
+        </div>
+    </section>
+
+</main>
+
+<!-- Toast Notification -->
+<div id="toast" class="toast">✓ Information submitted successfully</div>
+
+<footer>
+    © Repragram By Abraham The Hacker 
+</footer>
+
+<!-- ================= JAVASCRIPT ================= -->
+<script>
+    function switchTab(tabId) {
+        // Update buttons
+        document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+        event.currentTarget.classList.add('active');
+
+        // Update content
+        document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+        document.getElementById('tab-' + tabId).classList.add('active');
+    }
+
+    function filterTable() {
+        const term = document.getElementById('tableSearch').value.toLowerCase();
+        document.querySelectorAll('#staffTable tbody tr').forEach(row => {
+            row.style.display = row.textContent.toLowerCase().includes(term) ? '' : 'none';
+        });
+    }
+
+    function handleSubmit(e) {
+        e.preventDefault();
+        const toast = document.getElementById('toast');
+        toast.classList.add('show');
+        e.target.reset();
+        setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+</script>
+
+</body>
+</html>
